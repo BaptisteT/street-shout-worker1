@@ -4,7 +4,7 @@ namespace :twitter do
     require 'net/https'
     uri = URI('https://api.twitter.com/1.1/search/tweets.json')
     params = {"result_type" => "recent", "count" => "10" , "geocode" => "37.753683,-122.418079,3mi"} 
-    headers = {"Authorization" => "Bearer " + TWITTER_BEARER_TOKEN}
+    headers = {"Authorization" => "Bearer " + ENV['TWITTER_BEARER_TOKEN']}
     
     http = Net::HTTP.new(uri.host, uri.port)
     http.use_ssl = true
