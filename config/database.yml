@@ -12,7 +12,7 @@ development:
   adapter: mysql2
   encoding: utf8
   reconnect: false
-  database: street-shout-worker1_development
+  database: street_shout_development
   pool: 5
   username: root
   password:
@@ -35,8 +35,8 @@ production:
   adapter: mysql2
   encoding: utf8
   reconnect: false
-  database: street-shout-worker1_production
+  database: streetshoutproduction
   pool: 5
-  username: root
-  password:
+  username: streetshout
+  password: isthisit99
   socket: /tmp/mysql.sock
