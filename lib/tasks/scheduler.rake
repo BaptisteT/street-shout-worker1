@@ -44,9 +44,9 @@ namespace :twitter do
     }
 
     cities.each do |key, value|
-      geocode = value[0].to_s + "," + value[1].to_s + ",30km"
+      geocode = value[0].to_s + "," + value[1].to_s + ",400km"
       uri = URI("https://api.twitter.com/1.1/search/tweets.json")
-      params = {"result_type" => "recent", "count" => "100" , "geocode" => geocode} 
+      params = {"q" => "#local", "result_type" => "recent", "count" => "100" , "geocode" => geocode} 
       twitter_token = Rails.env.development? ? TWITTER_BEARER_TOKEN : ENV['TWITTER_BEARER_TOKEN']
       headers = {"Authorization" => "Bearer " + twitter_token}
       
@@ -61,14 +61,38 @@ namespace :twitter do
       JSON.parse(res.body)["statuses"].each do |tweet|
         nbr_tweets += 1
         shout = nil
-        if tweet.has_key?("geo") && !tweet["geo"].nil? && tweet["geo"].has_key?("coordinates")
-          shout = Shout.create(description: tweet["text"], lat: tweet["coordinates"]["coordinates"][0].to_f, lng: tweet["geo"]["coordinates"][1].to_f, display_name: tweet["user"]["name"], source: "twitter")  
-          puts "Success: #{key}"
-          nbr_saved_tweets += 1
-        elsif tweet.has_key?("coordinates") && !tweet["coordinates"].nil? && tweet["geo"].has_key?("coordinates")
+        
+        if tweet.has_key?("coordinates") && !tweet["coordinates"].nil? && tweet["geo"].has_key?("coordinates")
           shout = Shout.create(description: tweet["text"], lat: tweet["coordinates"]["coordinates"][1].to_f, lng: tweet["coordinates"]["coordinates"][0].to_f, display_name: tweet["user"]["name"], source: "twitter")  
-          puts "Success: #{key}"
-          nbr_saved_tweets += 1
+          puts "Success(coord): #{key}: #{tweet["text"]} - #{tweet["coordinates"]["coordinates"][1]} (#{value[0]}) - #{tweet["coordinates"]["coordinates"][0]} (#{value[1]})"
+          nbr_saved_tweets += 1 
+        end
+      end
+    end
+
+    cities.each do |key, value|
+      geocode = value[0].to_s + "," + value[1].to_s + ",400km"
+      uri = URI("https://api.twitter.com/1.1/search/tweets.json")
+      params = {"q" => "##{key}", "result_type" => "recent", "count" => "100" , "geocode" => geocode} 
+      twitter_token = Rails.env.development? ? TWITTER_BEARER_TOKEN : ENV['TWITTER_BEARER_TOKEN']
+      headers = {"Authorization" => "Bearer " + twitter_token}
+      
+      http = Net::HTTP.new(uri.host, uri.port)
+      http.use_ssl = true
+      http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+      req = Net::HTTP::Get.new(uri.path)
+      req.set_form_data(params)
+      req = Net::HTTP::Get.new( uri.path+ '?' + req.body , headers)
+      res = http.request(req)
+
+      JSON.parse(res.body)["statuses"].each do |tweet|
+        nbr_tweets += 1
+        shout = nil
+        
+        if tweet.has_key?("coordinates") && !tweet["coordinates"].nil? && tweet["geo"].has_key?("coordinates")
+          shout = Shout.create(description: tweet["text"], lat: tweet["coordinates"]["coordinates"][1].to_f, lng: tweet["coordinates"]["coordinates"][0].to_f, display_name: tweet["user"]["name"], source: "twitter")  
+          puts "Success(coord): #{key}: #{tweet["text"]} - #{tweet["coordinates"]["coordinates"][1]} (#{value[0]}) - #{tweet["coordinates"]["coordinates"][0]} (#{value[1]})"
+          nbr_saved_tweets += 1 
         end
       end
     end
