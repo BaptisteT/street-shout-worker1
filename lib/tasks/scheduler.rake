@@ -1,12 +1,4 @@
-namespace :twitter do
-  desc "Retrieve recent tweets"
-  task :retrieve => :environment do
-    require 'net/https'
-
-    nbr_tweets = 0
-    nbr_saved_tweets = 0
-
-    cities = {
+cities = {
       tokyo: [35.688533, 139.735107],
       newyork: [40.796138, -73.966827],
       saupaulo: [-23.556434, -46.649323],
@@ -43,61 +35,61 @@ namespace :twitter do
       santiago: [-33.468108, -70.669556]
     }
 
-    cities.each do |key, value|
-      geocode = value[0].to_s + "," + value[1].to_s + ",400km"
-      uri = URI("https://api.twitter.com/1.1/search/tweets.json")
-      params = {"q" => "#local", "result_type" => "recent", "count" => "100" , "geocode" => geocode} 
-      twitter_token = Rails.env.development? ? TWITTER_BEARER_TOKEN : ENV['TWITTER_BEARER_TOKEN']
-      headers = {"Authorization" => "Bearer " + twitter_token}
-      
-      http = Net::HTTP.new(uri.host, uri.port)
-      http.use_ssl = true
-      http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-      req = Net::HTTP::Get.new(uri.path)
-      req.set_form_data(params)
-      req = Net::HTTP::Get.new( uri.path+ '?' + req.body , headers)
-      res = http.request(req)
+def retrieve_tweets(city, lat, lng, hash_tag, count) 
+  geocode = lat.to_s + "," + lng.to_s + ",400km"
+  uri = URI("https://api.twitter.com/1.1/search/tweets.json")
+  params = {"q" => hash_tag, "result_type" => "recent", "count" => count.to_s , "geocode" => geocode} 
+  twitter_token = Rails.env.development? ? TWITTER_BEARER_TOKEN : ENV['TWITTER_BEARER_TOKEN']
+  headers = {"Authorization" => "Bearer " + twitter_token}
+  
+  http = Net::HTTP.new(uri.host, uri.port)
+  http.use_ssl = true
+  http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+  req = Net::HTTP::Get.new(uri.path)
+  req.set_form_data(params)
+  req = Net::HTTP::Get.new( uri.path+ '?' + req.body , headers)
+  http.request(req)  
+end
 
-      JSON.parse(res.body)["statuses"].each do |tweet|
-        nbr_tweets += 1
-        shout = nil
-        
-        if tweet.has_key?("coordinates") && !tweet["coordinates"].nil? && tweet["geo"].has_key?("coordinates")
-          shout = Shout.create(description: tweet["text"], lat: tweet["coordinates"]["coordinates"][1].to_f, lng: tweet["coordinates"]["coordinates"][0].to_f, display_name: tweet["user"]["name"], source: "twitter")  
-          puts "Success(coord): #{key}: #{tweet["text"]} - #{tweet["coordinates"]["coordinates"][1]} (#{value[0]}) - #{tweet["coordinates"]["coordinates"][0]} (#{value[1]})"
-          nbr_saved_tweets += 1 
-        end
-      end
+def parse_tweets(res, key)
+  nbr_saved_tweets = 0
+  JSON.parse(res.body)["statuses"].each do |tweet|
+    shout = nil
+    
+    if tweet.has_key?("coordinates") && !tweet["coordinates"].nil? && tweet["geo"].has_key?("coordinates")
+      shout = Shout.create(description: tweet["text"], lat: tweet["coordinates"]["coordinates"][1].to_f, lng: tweet["coordinates"]["coordinates"][0].to_f, display_name: tweet["user"]["name"], source: "twitter", created_at: Time.zone.parse(tweet["created_at"]))  
+      puts "Success: #{key}: #{tweet["text"]}"
+      nbr_saved_tweets += 1
+    end
+  end
+
+  nbr_saved_tweets
+end
+
+#Example: rake twitter:retrieve_all_cities_with_count\[200\]
+namespace :twitter do
+  desc "Retrieve specified number of recent tweets for each city"
+  task :retrieve_all_cities_with_count, [:count] => :environment do |t,args|
+    require 'net/https'
+
+    nbr_saved_tweets = 0
+
+    cities.each do |key, value|
+      res = retrieve_tweets(key, value[0], value[1], "#local", args.count / 2)
+      nbr_saved_tweets += parse_tweets(res, key)
+      res = retrieve_tweets(key, value[0], value[1], "##{key}", args.count / 2)
+      nbr_saved_tweets += parse_tweets(res, key)
     end
 
-    cities.each do |key, value|
-      geocode = value[0].to_s + "," + value[1].to_s + ",400km"
-      uri = URI("https://api.twitter.com/1.1/search/tweets.json")
-      params = {"q" => "##{key}", "result_type" => "recent", "count" => "100" , "geocode" => geocode} 
-      twitter_token = Rails.env.development? ? TWITTER_BEARER_TOKEN : ENV['TWITTER_BEARER_TOKEN']
-      headers = {"Authorization" => "Bearer " + twitter_token}
-      
-      http = Net::HTTP.new(uri.host, uri.port)
-      http.use_ssl = true
-      http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-      req = Net::HTTP::Get.new(uri.path)
-      req.set_form_data(params)
-      req = Net::HTTP::Get.new( uri.path+ '?' + req.body , headers)
-      res = http.request(req)
+    puts "Nbr of saved tweets: #{nbr_saved_tweets}"  
+  end
 
-      JSON.parse(res.body)["statuses"].each do |tweet|
-        nbr_tweets += 1
-        shout = nil
-        
-        if tweet.has_key?("coordinates") && !tweet["coordinates"].nil? && tweet["geo"].has_key?("coordinates")
-          shout = Shout.create(description: tweet["text"], lat: tweet["coordinates"]["coordinates"][1].to_f, lng: tweet["coordinates"]["coordinates"][0].to_f, display_name: tweet["user"]["name"], source: "twitter")  
-          puts "Success(coord): #{key}: #{tweet["text"]} - #{tweet["coordinates"]["coordinates"][1]} (#{value[0]}) - #{tweet["coordinates"]["coordinates"][0]} (#{value[1]})"
-          nbr_saved_tweets += 1 
-        end
-      end
-    end
+  #Example: rake twitter:display_with_city_and_count\[paris, 1\]
+  desc "Display specified number of tweets in the specified city"
+  task :display_with_city_and_count, [:city, :count] =>:environment do |t,args|
+    require 'net/https'
 
-    puts "Nbr of tweets: #{nbr_tweets}"
-    puts "Nbr of saved tweets: #{nbr_saved_tweets}"
+    res = retrieve_tweets(args.city.to_sym, cities[args.city.to_sym][0], cities[args.city.to_sym][1], "#local", args.count.to_i)
+    puts "#{res.body}"
   end
 end
