@@ -75,16 +75,16 @@ namespace :twitter do
     nbr_saved_tweets = 0
 
     cities.each do |key, value|
-      res = retrieve_tweets(key, value[0], value[1], "#local", args.count / 2)
+      res = retrieve_tweets(key, value[0], value[1], "#local", args.count.to_i / 2)
       nbr_saved_tweets += parse_tweets(res, key)
-      res = retrieve_tweets(key, value[0], value[1], "##{key}", args.count / 2)
+      res = retrieve_tweets(key, value[0], value[1], "##{key}", args.count.to_i / 2)
       nbr_saved_tweets += parse_tweets(res, key)
     end
 
     puts "Nbr of saved tweets: #{nbr_saved_tweets}"  
   end
 
-  #Example: rake twitter:display_with_city_and_count\[paris, 1\]
+  #Example: rake twitter:display_with_city_and_count\['paris', 1\]
   desc "Display specified number of tweets in the specified city"
   task :display_with_city_and_count, [:city, :count] =>:environment do |t,args|
     require 'net/https'
