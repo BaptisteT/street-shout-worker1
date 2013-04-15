@@ -47,6 +47,7 @@ def retrieve_tweets(city, lat, lng, hash_tag, count)
   http.verify_mode = OpenSSL::SSL::VERIFY_NONE
   req = Net::HTTP::Get.new(uri.path)
   req.set_form_data(params)
+  puts "Request: #{uri.path+ '?' + req.body}"
   req = Net::HTTP::Get.new( uri.path+ '?' + req.body , headers)
   http.request(req)  
 end
@@ -66,30 +67,30 @@ def parse_tweets(res, key)
   nbr_saved_tweets
 end
 
-#Example: rake twitter:retrieve_all_cities_with_count\[200\]
+#Example: rake twitter:retrieve_all_cities_with_nbr\[200\]
 namespace :twitter do
   desc "Retrieve specified number of recent tweets for each city"
-  task :retrieve_all_cities_with_count, [:count] => :environment do |t,args|
+  task :retrieve_all_cities_with_nbr, [:nbr] => :environment do |t,args|
     require 'net/https'
 
     nbr_saved_tweets = 0
 
     cities.each do |key, value|
-      res = retrieve_tweets(key, value[0], value[1], "#local", args.count.to_i / 2)
+      res = retrieve_tweets(key, value[0], value[1], "#local", args.nbr.to_i / 2)
       nbr_saved_tweets += parse_tweets(res, key)
-      res = retrieve_tweets(key, value[0], value[1], "##{key}", args.count.to_i / 2)
+      res = retrieve_tweets(key, value[0], value[1], "##{key}", args.nbr.to_i / 2)
       nbr_saved_tweets += parse_tweets(res, key)
     end
 
     puts "Nbr of saved tweets: #{nbr_saved_tweets}"  
   end
 
-  #Example: rake twitter:display_with_city_and_count\['paris', 1\]
+  #Example: rake twitter:display_with_city_and_nbr\['paris',1\]
   desc "Display specified number of tweets in the specified city"
-  task :display_with_city_and_count, [:city, :count] =>:environment do |t,args|
+  task :display_with_city_and_nbr, [:city, :nbr] =>:environment do |t,args|
     require 'net/https'
 
-    res = retrieve_tweets(args.city.to_sym, cities[args.city.to_sym][0], cities[args.city.to_sym][1], "#local", args.count.to_i)
+    res = retrieve_tweets(args.city.to_sym, cities[args.city.to_sym][0], cities[args.city.to_sym][1], "#local", args.nbr.to_i)
     puts "#{res.body}"
   end
 end
