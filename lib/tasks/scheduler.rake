@@ -32,7 +32,8 @@ cities = {
       barcelona: [41.390204, 2.178040],
       berlin: [52.527919, 13.406067],
       montreal: [45.510197, -73.553467],
-      santiago: [-33.468108, -70.669556]
+      santiago: [-33.468108, -70.669556],
+      boston: [42.355452, -71.057358]
     }
 
 def retrieve_tweets(city, lat, lng, hash_tag, count) 
@@ -90,7 +91,15 @@ namespace :twitter do
   task :display_with_city_and_nbr, [:city, :nbr] =>:environment do |t,args|
     require 'net/https'
 
-    res = retrieve_tweets(args.city.to_sym, cities[args.city.to_sym][0], cities[args.city.to_sym][1], "#local", args.nbr.to_i)
+    res = retrieve_tweets(args.city.to_sym, cities[args.city.to_sym][0], cities[args.city.to_sym][1], "#bombing", args.nbr.to_i)
+    puts "#{res.body}"
+  end
+
+  #Example: rake twitter:display_with_city_and_nbr\['paris', 'hashtag', 1\]
+  desc "Display specified number of tweets in the specified city with specified hashtag"
+  task :display_with_city_and_hashtag_and_nbr, [:city, :hashtag, :nbr] =>:environment do |t,args|
+    require 'net/https'
+    res = retrieve_tweets(args.city.to_sym, cities[args.city.to_sym][0], cities[args.city.to_sym][2], "#" + args.hashtag, args.nbr.to_i)
     puts "#{res.body}"
   end
 end
