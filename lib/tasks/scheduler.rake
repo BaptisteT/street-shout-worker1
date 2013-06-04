@@ -68,8 +68,8 @@ def parse_tweets(res, key)
   nbr_saved_tweets
 end
 
-#Example: rake twitter:retrieve_all_cities_with_nbr\[200\]
 namespace :twitter do
+  #Example: rake twitter:retrieve_all_cities_with_nbr\[200\]
   desc "Retrieve specified number of recent tweets for each city"
   task :retrieve_all_cities_with_nbr, [:nbr] => :environment do |t,args|
     require 'net/https'
@@ -101,5 +101,22 @@ namespace :twitter do
     require 'net/https'
     res = retrieve_tweets(args.city.to_sym, cities[args.city.to_sym][0], cities[args.city.to_sym][2], "#" + args.hashtag, args.nbr.to_i)
     puts "#{res.body}"
+  end
+end
+
+namespace :awake do
+  #Example: rake awake:keep_server_awake
+  desc "Send request to the server to keep him awake"
+  task :keep_server_awake => :environment do
+    require 'net/http'
+
+    uri = URI("http://street-shout.herokuapp.com/global_feed_shouts.json")
+    params = {"page" => "1"} 
+    http = Net::HTTP.new(uri.host, uri.port)
+    req = Net::HTTP::Get.new(uri.path)
+    req.set_form_data(params)
+    req = Net::HTTP::Get.new( uri.path+ '?' + req.body , {})
+    res = http.request(req)  
+    puts "Global feed: #{res.body}" 
   end
 end
