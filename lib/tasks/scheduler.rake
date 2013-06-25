@@ -116,7 +116,14 @@ namespace :awake do
     req = Net::HTTP::Get.new(uri.path)
     req.set_form_data(params)
     req = Net::HTTP::Get.new( uri.path+ '?' + req.body , {})
+    res = http.request(req)
+
+    uri = URI("http://dev-street-shout.herokuapp.com/global_feed_shouts.json")
+    params = {"page" => "1"} 
+    http = Net::HTTP.new(uri.host, uri.port)
+    req = Net::HTTP::Get.new(uri.path)
+    req.set_form_data(params)
+    req = Net::HTTP::Get.new( uri.path+ '?' + req.body , {})
     res = http.request(req)  
-    puts "Global feed: #{res.body}" 
   end
 end
