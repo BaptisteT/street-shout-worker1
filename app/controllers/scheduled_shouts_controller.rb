@@ -17,7 +17,7 @@ class ScheduledShoutsController < ApplicationController
                                 params[:scheduled_shout]["scheduled_time(4i)"].to_i,
                                 params[:scheduled_shout]["scheduled_time(5i)"].to_i)
 
-    params[:scheduled_time] = shout_date_time
+    params[:scheduled_shout][:scheduled_time] = shout_date_time
 
     @scheduled_shout = ScheduledShout.new(params[:scheduled_shout])
 
