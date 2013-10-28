@@ -24,12 +24,8 @@
     <%= f.text_field :lng %>
   </div>
   <div class="field">
-    <%= f.label :scheduled_date %>
-    <%= f.date_select :scheduled_time %>
-  </div>
-  <div class="field">
-    <%= f.label :scheduled_time %>
-    <%= f.time_select :scheduled_time, :ignore_date => true %>
+    <%= f.label :scheduled_date_and_time %>
+    <%= f.datetime_select :scheduled_time %>
   </div>
   <div class="field">
     <%= f.label :description %>
