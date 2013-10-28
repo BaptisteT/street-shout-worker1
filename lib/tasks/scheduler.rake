@@ -139,7 +139,7 @@ namespace :scheduled_shouts do
                     lng: scheduledShout[:lng],
                     description: scheduledShout[:description],
                     display_name: scheduledShott[:display_name],
-                    image: scheduledShout[:image]
+                    image: scheduledShout[:image],
                     source: "scheduled")
 
       scheduledShout.destroy
