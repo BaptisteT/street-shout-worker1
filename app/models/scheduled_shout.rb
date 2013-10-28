@@ -1,5 +1,5 @@
 class ScheduledShout < ActiveRecord::Base
-  attr_accessible   :description, :lat, :lng, :schedule_time, :display_name, :image, :author
+  attr_accessible   :description, :lat, :lng, :scheduled_time, :display_name, :image, :author
   
   validates :description, presence: true, length: { maximum: 140 }
   validates :display_name, presence: true, length: { maximum: 20 }

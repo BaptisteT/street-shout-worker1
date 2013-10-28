@@ -17,13 +17,9 @@ class ScheduledShoutsController < ApplicationController
                                 params[:scheduled_shout]["scheduled_time(4i)"].to_i,
                                 params[:scheduled_shout]["scheduled_time(5i)"].to_i)
 
-    @scheduled_shout = ScheduledShout.new(author: params[:scheduled_shout][:author],
-                                        lat: params[:scheduled_shout][:lat],
-                                        lng: params[:scheduled_shout][:lng],
-                                        scheduled_time: shout_date_time,
-                                        description: params[:scheduled_shout][:description],
-                                        display_name: params[:scheduled_shout][:display_name],
-                                        image: params[:scheduled_shout][:image])
+    params[:scheduled_shout][:scheduled_time] = shout_date_time
+
+    @scheduled_shout = ScheduledShout.new(params[:scheduled_shout])
 
     respond_to do |format|
       if @scheduled_shout.save
