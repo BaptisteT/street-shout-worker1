@@ -19,6 +19,8 @@ class ScheduledShoutsController < ApplicationController
 
     params[:scheduled_shout][:scheduled_time] = shout_date_time
 
+    Rails.logger.info "BAB PARAMS VALUE #{params}"
+
     @scheduled_shout = ScheduledShout.new(params[:scheduled_shout])
 
     respond_to do |format|
