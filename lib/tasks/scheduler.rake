@@ -127,3 +127,22 @@ namespace :awake do
     res = http.request(req)  
   end
 end
+
+namespace :scheduled_shouts do
+  #Example: rake schedule_shouts:send_scheduled_shouts
+  desc "Send shouts that have been scheduled in the last 10 minutes"
+  task :send_scheduled_shouts => :environment do
+    scheduledShouts = ScheduledShout.where("scheduled_time <= :now AND scheduled_time >= :four_hours_ago", {:now => Time.now, :four_hours_ago => Time.now - 4.hours})
+
+    scheduledShouts.each do |scheduledShout|
+      Shout.create(lat: scheduledShout[:lat],
+                    lng: scheduledShout[:lng],
+                    description: scheduledShout[:description],
+                    display_name: scheduledShott[:display_name],
+                    image: scheduledShout[:image]
+                    source: "scheduled")
+
+      scheduledShout.destroy
+    end  
+  end
+end
