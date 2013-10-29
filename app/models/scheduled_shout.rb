@@ -9,7 +9,7 @@ class ScheduledShout < ActiveRecord::Base
   validates :scheduled_time,      presence: true
   validates :author, presence: true
 
-  Paperclip.interpolates :file_name do |attachment|
+  Paperclip.interpolates :file_name do |attachment, style|
     attachment.instance.id + "--400"
   end
 
