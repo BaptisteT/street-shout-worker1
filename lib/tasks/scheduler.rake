@@ -135,7 +135,7 @@ namespace :scheduled_shouts do
     scheduledShouts = ScheduledShout.where("scheduled_time <= :now AND scheduled_time >= :four_hours_ago", {:now => Time.now, :four_hours_ago => Time.now - 4.hours})
 
     scheduledShouts.each do |scheduledShout|
-      image_url = scheduledShout.avatar.file? ? scheduledShout.avatar.url(:square) : nil;
+      image_url = scheduledShout.avatar.file? ? /s3.amazonaws.com\/scheduled_shouts\/square\/\d+--400/.match(scheduledShout.avatar.url(:square)) : nil
       Shout.create(lat: scheduledShout.lat,
                     lng: scheduledShout.lng,
                     description: scheduledShout.description,
