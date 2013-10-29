@@ -11,22 +11,26 @@ class ScheduledShoutsController < ApplicationController
 
   # POST /scheduled_shouts
   def create
-    shout_date_time = DateTime.new(params[:scheduled_shout]["scheduled_time(1i)"].to_i, 
-                                params[:scheduled_shout]["scheduled_time(2i)"].to_i,
-                                params[:scheduled_shout]["scheduled_time(3i)"].to_i,
-                                params[:scheduled_shout]["scheduled_time(4i)"].to_i,
-                                params[:scheduled_shout]["scheduled_time(5i)"].to_i)
+    if params[:scheduled_shout][:password] = "shoutouillons"
+        shout_date_time = DateTime.new(params[:scheduled_shout]["scheduled_time(1i)"].to_i, 
+                                    params[:scheduled_shout]["scheduled_time(2i)"].to_i,
+                                    params[:scheduled_shout]["scheduled_time(3i)"].to_i,
+                                    params[:scheduled_shout]["scheduled_time(4i)"].to_i,
+                                    params[:scheduled_shout]["scheduled_time(5i)"].to_i)
 
-    params[:scheduled_shout][:scheduled_time] = shout_date_time
+        params[:scheduled_shout][:scheduled_time] = shout_date_time
 
-    @scheduled_shout = ScheduledShout.new(params[:scheduled_shout])
+        @scheduled_shout = ScheduledShout.new(params[:scheduled_shout])
 
-    respond_to do |format|
-      if @scheduled_shout.save
-        format.html { render action: "new", notice: 'Shout was successfully scheduled.' }
-      else
-        format.html { render action: "new" }
-      end
-    end
+        respond_to do |format|
+          if @scheduled_shout.save
+            format.html { render action: "new", notice: 'You rock!' }
+          else
+            format.html { render action: "new", notice: 'Bad luck, it failed...' }
+          end
+        end
+    else 
+        format.html { render action: "new", notice: 'Wrong password dude, get outta here!!!' }    
+    end 
   end
 end
