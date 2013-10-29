@@ -135,6 +135,7 @@ namespace :scheduled_shouts do
     scheduledShouts = ScheduledShout.where("scheduled_time <= :now AND scheduled_time >= :four_hours_ago", {:now => Time.now, :four_hours_ago => Time.now - 4.hours})
 
     scheduledShouts.each do |scheduledShout|
+      image_url = scheduledShout.avatar ? scheduledShout.avatar.url(:square) : nil;
       Shout.create(lat: scheduledShout.lat,
                     lng: scheduledShout.lng,
                     description: scheduledShout.description,
@@ -142,7 +143,7 @@ namespace :scheduled_shouts do
                     image: scheduledShout.avatar.url(:square),
                     source: "scheduled")
 
-      scheduledShout.destroy
+      scheduledShout.delete
     end  
   end
 end

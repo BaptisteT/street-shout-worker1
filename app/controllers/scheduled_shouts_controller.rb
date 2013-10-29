@@ -20,6 +20,12 @@ class ScheduledShoutsController < ApplicationController
 
     params[:scheduled_shout][:scheduled_time] = shout_date_time
     @scheduled_shout = ScheduledShout.new(params[:scheduled_shout])
+    Rails.logger.info "BAB SCHEDULED SHOUT AVATAR #{@scheduled_shout.avatar}"
+    if !params[:scheduled_shout][:avatar]
+      @scheduled_shout.avatar = nil
+      Rails.logger.info "BAB SCHEDULED SHOUT AVATAR HAS BEEN SET TO NIL #{@scheduled_shout.avatar}"
+    end
+
     if params[:scheduled_shout][:password] == "shoutouillons"
       respond_to do |format|
         if @scheduled_shout.save
