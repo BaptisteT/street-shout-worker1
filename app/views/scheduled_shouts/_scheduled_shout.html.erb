@@ -7,7 +7,7 @@
     <div>Time: <%= scheduled_shout.scheduled_time %></div>
     <div>Description: <%= scheduled_shout.description %></div>
     <div>Pseudo: <%= scheduled_shout.display_name %></div> 
-    <% if scheduled_shout.avatar %>
+    <% if scheduled_shout.avatar.file? %>
       <div><%= image_tag scheduled_shout.avatar.url(:square) %></div>   
     <% end %>
     <div class="actions">
