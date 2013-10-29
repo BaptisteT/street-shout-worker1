@@ -140,7 +140,7 @@ namespace :scheduled_shouts do
                     lng: scheduledShout.lng,
                     description: scheduledShout.description,
                     display_name: scheduledShout.display_name,
-                    image: scheduledShout.avatar.url(:square),
+                    image: image_url,
                     source: "scheduled")
 
       scheduledShout.delete
