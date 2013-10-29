@@ -23,17 +23,28 @@ class ScheduledShoutsController < ApplicationController
       respond_to do |format|
         if @scheduled_shout.save
           @notice = 'You rock!'
-          format.html { render action: "new"}
+          format.html { redirect_to root_url }
         else
           @notice = 'Bad luck, it failed...' 
-          format.html { render action: "new"}
+          format.html { redirect_to root_url }
         end
       end
     else 
       respond_to do |format|
         @notice = 'Wrong password dude, get outta here!!!'
-        format.html { render action: "new" }   
+        format.html { redirect_to root_url }   
       end 
     end 
+  end
+
+  # DELETE /scheduled_shouts/1
+  def destroy
+    @scheduled_shout = ScheduledShout.find(params[:id])
+    @scheduled_shout.destroy
+
+    respond_to do |format|
+      @notice = 'Scheduled shout deleted!' 
+      format.html { redirect_to root_url }
+    end
   end
 end

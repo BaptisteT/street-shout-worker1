@@ -1,0 +1,14 @@
+<div class="friend" id="<%= scheduled_shout.id %>">
+
+  <div class="back">
+    <span class="friend-name"><%= scheduled_shout.lat %>
+    <span class="friend-name"><%= scheduled_shout.lng %>
+    <span class="friend-name"><%= scheduled_shout.scheduled_time %>
+    <span class="friend-name"><%= scheduled_shout.description %></span>
+    <span class="friend-name"><%= scheduled_shout.display_name %></span>
+    <span class="friend-name"><%= scheduled_shout.author %></span>
+    <div class="actions">
+      <%= link_to 'Delete', friend, confirm: 'Sure you want to delete?', method: :delete, class: 'destroy' %>
+    </div>
+  </div>
+</div>

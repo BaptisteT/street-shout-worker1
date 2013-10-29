@@ -51,4 +51,8 @@
   <% if @notice %>
     <p class="flash-notice"><%= @notice %></p>
   <% end %>
+
+  <section id="friends">
+    <%= render @scheduled_shouts %>
+  </section>
 <% end %>
