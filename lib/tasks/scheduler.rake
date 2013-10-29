@@ -138,7 +138,7 @@ namespace :scheduled_shouts do
       Shout.create(lat: scheduledShout[:lat],
                     lng: scheduledShout[:lng],
                     description: scheduledShout[:description],
-                    display_name: scheduledShott[:display_name],
+                    display_name: scheduledShout[:display_name],
                     image: scheduledShout[:image],
                     source: "scheduled")
 
