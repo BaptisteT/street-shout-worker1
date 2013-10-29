@@ -10,7 +10,7 @@ class ScheduledShout < ActiveRecord::Base
   validates :author, presence: true
 
   Paperclip.interpolates :file_name do |attachment, style|
-    attachment.instance.id + "--400"
+    attachment.instance.id.to_s + "--400"
   end
 
   # This method associates the attribute ":avatar" with a file attachment
