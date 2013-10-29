@@ -9,8 +9,13 @@ class ScheduledShout < ActiveRecord::Base
   validates :scheduled_time,      presence: true
   validates :author, presence: true
 
+  Paperclip.interpolates :file_name do |attachment|
+    attachment.instance.id + "--400"
+  end
+
   # This method associates the attribute ":avatar" with a file attachment
   has_attached_file :avatar, styles: {
     square: '400x400#'
-  }
+  },
+  path: ":style/:file_name"
 end
