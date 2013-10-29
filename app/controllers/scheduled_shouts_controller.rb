@@ -24,16 +24,20 @@ class ScheduledShoutsController < ApplicationController
       respond_to do |format|
         if @scheduled_shout.save
           @notice = 'You rock!'
-          format.html { redirect_to root_url }
+          @scheduled_shout = ScheduledShout.new
+          @scheduled_shouts = ScheduledShout.all
+          format.html { render action: "new" }
         else
           @notice = 'Bad luck, it failed...' 
-          format.html { redirect_to root_url }
+          @scheduled_shouts = ScheduledShout.all
+          format.html { render action: "new" }
         end
       end
     else 
       respond_to do |format|
         @notice = 'Wrong password dude, get outta here!!!'
-        format.html { redirect_to root_url }   
+        @scheduled_shouts = ScheduledShout.all
+        format.html { render action: "new" } 
       end 
     end 
   end

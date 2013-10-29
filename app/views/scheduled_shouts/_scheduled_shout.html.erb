@@ -1,12 +1,12 @@
 <div class="scheduled_shout" id="<%= scheduled_shout.id %>">
 
   <div class="scheduled_shout_fields">
+    <span><%= scheduled_shout.author %></span>
     <span><%= scheduled_shout.lat %>
     <span><%= scheduled_shout.lng %>
     <span><%= scheduled_shout.scheduled_time %>
     <span><%= scheduled_shout.description %></span>
-    <span><%= scheduled_shout.display_name %></span>
-    <span><%= scheduled_shout.author %></span>
+    <span><%= scheduled_shout.display_name %></span>    
     <div class="actions">
       <%= link_to 'Delete', scheduled_shout, confirm: 'Sure you want to delete?', method: :delete, class: 'destroy' %>
     </div>
