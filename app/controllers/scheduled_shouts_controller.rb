@@ -3,6 +3,7 @@ class ScheduledShoutsController < ApplicationController
   # GET /scheduled_shouts/new
   def new
     @scheduled_shout = ScheduledShout.new
+    @scheduled_shouts = ScheduledShout.all
 
     respond_to do |format|
       format.html # new.html.erb
