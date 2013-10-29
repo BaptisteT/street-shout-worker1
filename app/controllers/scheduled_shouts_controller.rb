@@ -22,14 +22,17 @@ class ScheduledShoutsController < ApplicationController
     if params[:scheduled_shout][:password] == "shoutouillons"
       respond_to do |format|
         if @scheduled_shout.save
-          format.html { render action: "new", notice: 'You rock!' }
+          @notice = 'You rock!'
+          format.html { render action: "new"}
         else
-          format.html { render action: "new", notice: 'Bad luck, it failed...' }
+          @notice = 'Bad luck, it failed...' 
+          format.html { render action: "new"}
         end
       end
     else 
       respond_to do |format|
-        format.html { render action: "new", notice: 'Wrong password dude, get outta here!!!' }   
+        @notice = 'Wrong password dude, get outta here!!!'
+        format.html { render action: "new" }   
       end 
     end 
   end
