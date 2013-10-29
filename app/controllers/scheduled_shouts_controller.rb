@@ -24,13 +24,13 @@ class ScheduledShoutsController < ApplicationController
 
         respond_to do |format|
           if @scheduled_shout.save
-            format.html { render root_path, notice: 'You rock!' }
+            format.html { render action: "new", notice: 'You rock!' }
           else
-            format.html { render root_path, notice: 'Bad luck, it failed...' }
+            format.html { render action: "new", notice: 'Bad luck, it failed...' }
           end
         end
     else 
-        format.html { render root_path, notice: 'Wrong password dude, get outta here!!!' }    
+        format.html { render action: "new", notice: 'Wrong password dude, get outta here!!!' }    
     end 
   end
 end
