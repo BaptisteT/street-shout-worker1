@@ -1,4 +1,7 @@
 <%= form_for(@scheduled_shout) do |f| %>
+  <% if flash[:notice] %>
+    <p class="flash-notice"><%= flash[:notice] %></p>
+  <% end %>
   <% if @scheduled_shout.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(@scheduled_shout.errors.count, "error") %> prohibited this shout from being saved:</h2>
