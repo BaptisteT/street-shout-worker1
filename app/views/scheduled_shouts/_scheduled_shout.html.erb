@@ -6,7 +6,10 @@
     <div>Lng: <%= scheduled_shout.lng %></div>
     <div>Time: <%= scheduled_shout.scheduled_time %></div>
     <div>Description: <%= scheduled_shout.description %></div>
-    <div>Pseudo: <%= scheduled_shout.display_name %></div>   
+    <div>Pseudo: <%= scheduled_shout.display_name %></div> 
+    <% if scheduled_shout.avatar %>
+      <div><%= image_tag scheduled_shout.avatar.url(:square) %></div>   
+    <% end %>
     <div class="actions">
       <%= link_to 'Delete', scheduled_shout, confirm: 'Sure you want to delete?', method: :delete, class: 'destroy' %>
     </div>
