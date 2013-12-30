@@ -132,7 +132,7 @@ namespace :scheduled_shouts do
   #Example: rake schedule_shouts:send_scheduled_shouts
   desc "Send shouts that have been scheduled in the last 10 minutes"
   task :send_scheduled_shouts => :environment do
-    scheduledShouts = ScheduledShout.where("scheduled_time <= :now AND scheduled_time >= :four_hours_ago", {:now => Time.now, :four_hours_ago => Time.now - 4.hours})
+    scheduledShouts = ScheduledShout.where("scheduled_time <= :next_scheduler_time", {:next_scheduler_time => Time.now + SCHEDULER_PERIOD})
 
     scheduledShouts.each do |scheduledShout|
       image_url = scheduledShout.avatar.file? ? /s3.amazonaws.com\/scheduled_shouts\/square\/\d+/.match(scheduledShout.avatar.url(:square)).to_s : nil
@@ -140,6 +140,7 @@ namespace :scheduled_shouts do
                     lng: scheduledShout.lng,
                     description: scheduledShout.description,
                     display_name: scheduledShout.display_name,
+                    is_born: scheduledShout.is_born,
                     image: image_url,
                     source: "scheduled")
 
