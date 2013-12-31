@@ -29,9 +29,9 @@ class ScheduledShout < ActiveRecord::Base
   private
 
   def is_valid_time?
-    if ! scheduled_time.is_a?(Date)
-      errors.add(:scheduled_time,'must be a valid date')
-    end
+    # if ! scheduled_time.is_a?(Date)
+    #   errors.add(:scheduled_time,'must be a valid date')
+    # end
     # if :scheduled_time < Time.now
     #   errors.add(:scheduled_time,'must be in the future')
     # end
