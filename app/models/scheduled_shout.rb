@@ -13,7 +13,7 @@ class ScheduledShout < ActiveRecord::Base
  with_options :if => :is_born do |shout|
    shout.validates :lat, :numericality => { :greater_than => BORN_LAT_MIN, :less_than_or_equal_to => BORN_LAT_MAX,
                                                                               :message => "This is not in the 3 Vallees" } 
-   shout.validates :long, :numericality => { :greater_than => BORN_LONG_MIN, :less_than_or_equal_to => BORN_LONG_MAX,
+   shout.validates :lng, :numericality => { :greater_than => BORN_LONG_MIN, :less_than_or_equal_to => BORN_LONG_MAX,
                                                                               :message => "This is not in the 3 Vallees" }  
  end
 
