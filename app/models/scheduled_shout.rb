@@ -11,10 +11,10 @@ class ScheduledShout < ActiveRecord::Base
   validates :author, presence: true
 
  with_options :if => :is_born do |shout|
-   shout.validates :lat, :numericality => { :greater_than => BORN_LAT_MIN, :less_than_or_equal_to => BORN_LAT_MAX,
-                                                                             :message => "This is not in the 3 Vallees"} 
-   shout.validates :long, :numericality => { :greater_than => BORN_LONG_MIN, :less_than_or_equal_to => BORN_LONG_MAX,
-                                                                             :message => "This is not in the 3 Vallees"}  
+   # shout.validates :lat, :numericality => { :greater_than => BORN_LAT_MIN, :less_than_or_equal_to => BORN_LAT_MAX,
+   #                                                                           :message => "This is not in the 3 Vallees"} 
+   # shout.validates :long, :numericality => { :greater_than => BORN_LONG_MIN, :less_than_or_equal_to => BORN_LONG_MAX,
+   #                                                                           :message => "This is not in the 3 Vallees"}  
  end
 
   Paperclip.interpolates :file_name do |attachment, style|
