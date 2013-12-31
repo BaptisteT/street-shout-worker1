@@ -18,10 +18,17 @@ class ScheduledShoutsController < ApplicationController
                                     params[:scheduled_shout]["scheduled_time(4i)"].to_i,
                                     params[:scheduled_shout]["scheduled_time(5i)"].to_i)
 
+    if shout_date_time < Time.now
+      @notice = 'The date should be in the future'
+      @scheduled_shouts = ScheduledShout.all
+      format.html { render action: "new" }
+    end
+
     params[:scheduled_shout][:scheduled_time] = shout_date_time
     @scheduled_shout = ScheduledShout.new(params[:scheduled_shout])
 
-    if params[:scheduled_shout][:password] == "shoutouillons"
+    if ["shoutouillons","Born2014"].include? params[:scheduled_shout][:password] 
+      @scheduled_shout.is_born = (params[:scheduled_shout][:password] == "Born2014")
       respond_to do |format|
         if @scheduled_shout.save
           @notice = 'You rock!'
@@ -36,9 +43,9 @@ class ScheduledShoutsController < ApplicationController
       end
     else 
       respond_to do |format|
-        @notice = 'Wrong password dude, get outta here!!!'
+        @notice = 'Wrong password dude!'
         @scheduled_shouts = ScheduledShout.all
-        format.html { render action: "new" } 
+        format.html { render action: "new" }
       end 
     end 
   end
