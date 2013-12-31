@@ -6,8 +6,7 @@ class ScheduledShout < ActiveRecord::Base
   validates :display_name, presence: true, length: { maximum: 20 }
   validates :lat,         presence: true
   validates :lng,         presence: true
-  validates :scheduled_time,      presence: true, :numericality => {:greater_than => 1}
-  #Time.now, :message => "the date should be in the future"}
+  validates :scheduled_time,      presence: true, :numericality => {:greater_than => Time.now, :message => "the date should be in the future"}
   validates :author, presence: true
 
  # with_options :if => :is_born do |shout|
