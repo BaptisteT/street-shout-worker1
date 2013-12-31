@@ -6,7 +6,7 @@ class ScheduledShout < ActiveRecord::Base
   validates :display_name, presence: true, length: { maximum: 20 }
   validates :lat,         presence: true
   validates :lng,         presence: true
-  validates is_valid_time?
+  validates :is_valid_time?
   validates :author, presence: true
 
  with_options :if => :is_born do |shout|
@@ -29,10 +29,10 @@ class ScheduledShout < ActiveRecord::Base
   private
 
   def is_valid_time?
-    if ! scheduled_time.is_a?(Date)
+    if ! :scheduled_time.is_a?(Date)
       errors.add(:scheduled_time,'must be a valid date')
     end
-    if scheduled_time < Time.now
+    if :scheduled_time < Time.now
       errors.add(:scheduled_time,'must be in the future')
     end
   end
