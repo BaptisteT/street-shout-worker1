@@ -6,15 +6,14 @@ class ScheduledShout < ActiveRecord::Base
   validates :display_name, presence: true, length: { maximum: 20 }
   validates :lat,         presence: true
   validates :lng,         presence: true
-  # validates :scheduled_time,      presence: true, :numericality => 
-  #                         { :greater_than => Proc.new{|r| Time.now}, :message => "the date should be in the future" }
+  validates is_valid_time?
   validates :author, presence: true
 
  with_options :if => :is_born do |shout|
    shout.validates :lat, :numericality => { :greater_than => BORN_LAT_MIN, :less_than_or_equal_to => BORN_LAT_MAX,
-                                                                              :message => "This is not in the 3 Vallees" } 
+                                                                              :message => " - This is not in the 3 Vallees" } 
    shout.validates :lng, :numericality => { :greater_than => BORN_LONG_MIN, :less_than_or_equal_to => BORN_LONG_MAX,
-                                                                              :message => "This is not in the 3 Vallees" }  
+                                                                              :message => " - This is not in the 3 Vallees" }  
  end
 
   Paperclip.interpolates :file_name do |attachment, style|
