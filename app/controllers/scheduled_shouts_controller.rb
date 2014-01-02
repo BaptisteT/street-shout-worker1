@@ -23,7 +23,6 @@ class ScheduledShoutsController < ApplicationController
     @scheduled_shout = ScheduledShout.new(params[:scheduled_shout])
 
     if ["shoutouillons","Born2014"].include? params[:scheduled_shout][:password] 
-      # @scheduled_shout.is_born = params[:scheduled_shout][:password] == "Born2014"
       respond_to do |format|
         if @scheduled_shout.save
           @notice = 'You rock!'
