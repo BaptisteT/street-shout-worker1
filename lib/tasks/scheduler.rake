@@ -129,7 +129,7 @@ namespace :awake do
 end
 
 namespace :scheduled_shouts do
-  #Example: rake schedule_shouts:send_scheduled_shouts
+  #Example: rake scheduled_shouts:send_scheduled_shouts
   desc "Send shouts that have been scheduled in the last 10 minutes"
   task :send_scheduled_shouts => :environment do
     scheduledShouts = ScheduledShout.where("scheduled_time <= :next_scheduler_time", {:next_scheduler_time => Time.now + SCHEDULER_PERIOD})
