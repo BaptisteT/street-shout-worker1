@@ -139,8 +139,8 @@ namespace :scheduled_shouts do
       Shout.create(lat: scheduledShout.lat,
                     lng: scheduledShout.lng,
                     description: scheduledShout.description,
-                    display_name: scheduledShout.display_name,
-                    is_born: scheduledShout.is_born,
+                    username: scheduledShout.display_name,
+                    user_id: 0,
                     image: image_url,
                     source: "scheduled")
 
